@@ -1,0 +1,123 @@
+/* Normalizar estilos */
+@import url('normalize.css');
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    text-align: center;
+    background-color: gray;
+    color: white;
+    padding: 10px 0;
+}
+
+header .date {
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightblue;
+    padding: 10px;
+}
+
+.nav-bar {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none; /* Ocultar en móvil */
+}
+
+.nav-bar li {
+    display: inline;
+    margin: 0 10px;
+}
+
+.nav-bar a {
+    color: lightcoral;
+    text-decoration: none;
+}
+
+.hamburger-menu {
+    display: block; /* Mostrar en móvil */
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Estilos para el contenido principal */
+main {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.main-news article, .secondary-news article {
+    margin-bottom: 20px;
+}
+
+.main-news img {
+    width: 100%;
+    height: auto;
+}
+
+.secondary-news article h3 {
+    font-size: 18px;
+}
+
+.secondary-news article a {
+    text-decoration: none;
+    color: #333;
+}
+
+/* Estilos para publicidad */
+aside {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.ad {
+    background-color: lightblue;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* Estilos para footer */
+footer {
+    background-color: gray;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Estilos para tablet y escritorio */
+@media (min-width: 600px) {
+    .nav-bar {
+        display: flex; /* Mostrar en tablet y escritorio */
+    }
+    .hamburger-menu {
+        display: none; /* Ocultar en tablet y escritorio */
+    }
+    main {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .main-news {
+        flex: 2;
+        margin-right: 10px;
+    }
+    .secondary-news {
+        flex: 1;
+    }
+    aside {
+        flex: 1;
+    }
+}
