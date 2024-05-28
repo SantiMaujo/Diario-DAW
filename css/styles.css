@@ -10,8 +10,8 @@ body {
 
 header {
     text-align: center;
-    background-color: gray;
-    color: blue;
+    background-color: blue;
+    color: yellow;
     padding: 10px 0;
 }
 
@@ -24,7 +24,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: lightblue;
+    background-color: yellow;
     padding: 10px;
 }
 
@@ -41,7 +41,7 @@ nav {
 }
 
 .nav-bar a {
-    color: lightcoral;
+    color: blue;
     text-decoration: none;
 }
 
@@ -84,7 +84,7 @@ aside {
 }
 
 .ad {
-    background-color: lightblue;
+    background-color: black;
     text-align: center;
     padding: 10px;
     margin-bottom: 10px;
@@ -92,8 +92,8 @@ aside {
 
 /* Estilos para footer */
 footer {
-    background-color: gray;
-    color: white;
+    background-color: blue;
+    color: yellow;
     text-align: center;
     padding: 10px;
 }
