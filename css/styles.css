@@ -64,7 +64,7 @@ main {
 
 .main-news img {
     width: 100%;
-    height: auto;
+    height: 1;
 }
 
 .secondary-news article h3 {
@@ -84,7 +84,7 @@ aside {
 }
 
 .ad {
-    background-color: black;
+    background-color: yellow;
     text-align: center;
     padding: 10px;
     margin-bottom: 10px;
