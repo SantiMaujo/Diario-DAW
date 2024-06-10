@@ -25,85 +25,75 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         if (isValid) {
-            alert("Formulario enviado correctamente.");
+            const formData = new FormData(form);
+            let formDataText = "";
+            formData.forEach((value, key) => {
+                formDataText += `${key}: ${value}\n`;
+            });
+            alert("Formulario enviado correctamente:\n" + formDataText);
         } else {
             alert("Por favor, corrija los errores en el formulario.");
         }
     });
 
-    document.getElementById("fullname").addEventListener("keydown", function(event) {
-        const title = document.getElementById("form-title");
-        title.textContent = `HOLA ${event.target.value}`;
-    });
-
     function validateField(field) {
-        const errorElement = document.getElementById(`error-${field.id}`);
+        const id = field.id;
+        const value = field.value.trim();
+        const errorElement = document.getElementById(`error-${id}`);
         let isValid = true;
 
-        switch (field.id) {
+        switch (id) {
             case "fullname":
-                if (field.value.length <= 6 || !field.value.includes(" ")) {
-                    errorElement.textContent = "El nombre completo debe tener más de 6 letras y al menos un espacio.";
-                    isValid = false;
-                }
+                isValid = value.length > 6 && /\s/.test(value);
+                errorElement.textContent = isValid ? "" : "Debe tener más de 6 letras y al menos un espacio.";
                 break;
             case "email":
-                const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-                if (!emailPattern.test(field.value)) {
-                    errorElement.textContent = "Debe ingresar un email válido.";
-                    isValid = false;
-                }
+                isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                errorElement.textContent = isValid ? "" : "Formato de email inválido.";
                 break;
             case "password":
-                if (field.value.length < 8 || !/\d/.test(field.value)) {
-                    errorElement.textContent = "La contraseña debe tener al menos 8 caracteres y contener números.";
-                    isValid = false;
-                }
+                isValid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value);
+                errorElement.textContent = isValid ? "" : "Al menos 8 caracteres, con letras y números.";
                 break;
             case "confirm-password":
-                const password = document.getElementById("password").value;
-                if (field.value !== password) {
-                    errorElement.textContent = "Las contraseñas no coinciden.";
-                    isValid = false;
-                }
+                const passwordValue = document.getElementById("password").value;
+                isValid = value === passwordValue;
+                errorElement.textContent = isValid ? "" : "Las contraseñas no coinciden.";
                 break;
             case "age":
-                if (field.value < 18) {
-                    errorElement.textContent = "Debes ser mayor de 18 años.";
-                    isValid = false;
-                }
+                isValid = Number.isInteger(Number(value)) && Number(value) >= 18;
+                errorElement.textContent = isValid ? "" : "Debe ser un número entero mayor o igual a 18.";
                 break;
             case "phone":
-                if (!/^\d{7,}$/.test(field.value)) {
-                    errorElement.textContent = "El teléfono debe tener al menos 7 dígitos y no aceptar espacios, guiones ni paréntesis.";
-                    isValid = false;
-                }
+                isValid = /^\d{7,}$/.test(value);
+                errorElement.textContent = isValid ? "" : "Número de al menos 7 dígitos.";
                 break;
             case "address":
-                if (field.value.length < 5 || !/.*\d.*/.test(field.value) || !/.*\s.*/.test(field.value)) {
-                    errorElement.textContent = "La dirección debe tener al menos 5 caracteres, con letras, números y un espacio en el medio.";
-                    isValid = false;
-                }
+                isValid = value.length >= 5 && /\s/.test(value);
+                errorElement.textContent = isValid ? "" : "Al menos 5 caracteres, con letras, números y un espacio.";
                 break;
             case "city":
-                if (field.value.length < 3) {
-                    errorElement.textContent = "La ciudad debe tener al menos 3 caracteres.";
-                    isValid = false;
-                }
+                isValid = value.length >= 3;
+                errorElement.textContent = isValid ? "" : "Al menos 3 caracteres.";
                 break;
             case "postal-code":
-                if (field.value.length < 3) {
-                    errorElement.textContent = "El código postal debe tener al menos 3 caracteres.";
-                    isValid = false;
-                }
+                isValid = value.length >= 3;
+                errorElement.textContent = isValid ? "" : "Al menos 3 caracteres.";
                 break;
             case "dni":
-                if (!/^\d{7,8}$/.test(field.value)) {
-                    errorElement.textContent = "El DNI debe tener 7 u 8 dígitos.";
-                    isValid = false;
-                }
+                isValid = /^\d{7,8}$/.test(value);
+                errorElement.textContent = isValid ? "" : "Número de 7 u 8 dígitos.";
+                break;
+            default:
                 break;
         }
         return isValid;
     }
+
+    // Actualiza el título en tiempo real
+    const fullnameInput = document.getElementById("fullname");
+    fullnameInput.addEventListener("input", function() {
+        const title = document.getElementById("form-title");
+        title.textContent = fullnameInput.value ? `HOLA ${fullnameInput.value.toUpperCase()}` : "HOLA";
+    });
 });
