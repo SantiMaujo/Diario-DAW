@@ -127,4 +127,69 @@ footer {
     aside {
         flex: 1;
     }
+    /* Estilos para el formulario de suscripción */
+.subscription-form {
+    background-color: yellow;
+    padding: 20px;
+}
+
+.subscription-form h2 {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+}
+
+#submit-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#submit-button:hover {
+    background-color: darkblue;
+}
+
+/* Responsive Styles */
+@media (min-width: 600px) {
+    .subscription-form form {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .form-group {
+        flex: 1 1 45%;
+        margin: 10px;
+    }
+
+    .form-group:nth-child(odd) {
+        margin-right: 5%;
+    }
+
+    #submit-button {
+        width: 30%;
+        margin: 0 auto;
+    }
+}
 }
