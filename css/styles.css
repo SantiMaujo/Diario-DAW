@@ -104,6 +104,14 @@ footer {
     text-align: center;
     padding: 10px;
 }
+.subscribe-link {
+    color: yellow; /* Color azul para el texto */
+    text-decoration: none; /* Quitar subrayado */
+}
+
+.subscribe-link:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}
 
 /* Estilos para tablet y escritorio */
 @media (min-width: 600px) {
