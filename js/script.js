@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('city').value = '';
         document.getElementById('postal-code').value = '';
         document.getElementById('dni').value = '';
-        formTitle.textContent = 'HOLA'; // Restablecer el título
+        formTitle.textContent = 'HOLA'; // Restablece el título
     }
 
     // Cargar datos desde localStorage si existen
