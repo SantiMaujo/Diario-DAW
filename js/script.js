@@ -1,9 +1,11 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById("subscription-form");
-    const submitButton = document.getElementById("submit-button");
-    const modal = document.getElementById("modal");
-    const modalMessage = document.getElementById("modal-message");
-    const closeModalBtn = document.getElementsByClassName("close-btn")[0];
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('subscription-form');
+    const submitButton = document.getElementById('submit-button');
+    const modal = document.getElementById('modal');
+    const modalMessage = document.getElementById('modal-message');
+    const closeModalBtn = document.getElementsByClassName('close-btn')[0];
+    const fullnameInput = document.getElementById('fullname');
+    const formTitle = document.getElementById('form-title');
 
     closeModalBtn.onclick = function() {
         modal.style.display = "none";
@@ -15,136 +17,164 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    form.addEventListener("blur", function(event) {
-        if (event.target.tagName === "INPUT") {
-            validateField(event.target);
-        }
-    }, true);
+    // Actualizar título a medida que se escribe el nombre completo
+    fullnameInput.addEventListener('input', function() {
+        formTitle.textContent = `HOLA ${fullnameInput.value}`;
+    });
 
-    form.addEventListener("focus", function(event) {
-        if (event.target.tagName === "INPUT") {
-            const errorElement = document.getElementById(`error-${event.target.id}`);
-            errorElement.textContent = "";
-        }
-    }, true);
-
-    submitButton.addEventListener("click", async function(event) {
+    submitButton.addEventListener('click', async function(event) {
         event.preventDefault();
 
-        let isValid = true;
-        const inputs = form.querySelectorAll("input");
+        const formData = {
+            fullname: document.getElementById('fullname').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            confirmPassword: document.getElementById('confirm-password').value,
+            age: document.getElementById('age').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            postalCode: document.getElementById('postal-code').value,
+            dni: document.getElementById('dni').value,
+        };
 
-        inputs.forEach(input => {
-            if (!validateField(input)) {
-                isValid = false;
-            }
-        });
-
-        if (isValid) {
-            const formData = {
-                fullname: document.getElementById("fullname").value,
-                email: document.getElementById("email").value,
-                password: document.getElementById("password").value,
-                confirmPassword: document.getElementById("confirm-password").value,
-                age: document.getElementById("age").value,
-                phone: document.getElementById("phone").value,
-                address: document.getElementById("address").value,
-                city: document.getElementById("city").value,
-                postalCode: document.getElementById("postal-code").value,
-                dni: document.getElementById("dni").value,
-            };
-
-            const params = new URLSearchParams(formData);
+        if (validateForm(formData)) {
+            console.log("Datos enviados:", JSON.stringify(formData)); // Log para ver qué se está enviando
 
             try {
-                const response = await fetch(`https://jsonplaceholder.typicode.com/users?${params}`, {
-                    method: 'GET'
+                const response = await fetch('https://jsonplaceholder.typicode.com/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
                 });
 
                 const data = await response.json();
+                console.log("Datos recibidos:", data); // Log para ver qué se está recibiendo
 
                 if (response.ok) {
                     showModal(`Suscripción exitosa: ${JSON.stringify(data)}`);
                     localStorage.setItem('subscriptionData', JSON.stringify(data));
+                    clearForm(); // Vaciar el formulario después de suscribirse exitosamente
                 } else {
                     showModal(`Error: ${response.statusText}`);
                 }
             } catch (error) {
                 showModal(`Error: ${error.message}`);
             }
-        } else {
-            showModal("Por favor, corrija los errores en el formulario.");
         }
     });
-
-    function validateField(field) {
-        const id = field.id;
-        const value = field.value.trim();
-        const errorElement = document.getElementById(`error-${id}`);
-        let isValid = true;
-
-        switch (id) {
-            case "fullname":
-                isValid = value.length > 6 && /\s/.test(value);
-                errorElement.textContent = isValid ? "" : "Debe tener más de 6 letras y al menos un espacio.";
-                break;
-            case "email":
-                isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-                errorElement.textContent = isValid ? "" : "Formato de email inválido.";
-                break;
-            case "password":
-                isValid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value);
-                errorElement.textContent = isValid ? "" : "Al menos 8 caracteres, con letras y números.";
-                break;
-            case "confirm-password":
-                const passwordValue = document.getElementById("password").value;
-                isValid = value === passwordValue;
-                errorElement.textContent = isValid ? "" : "Las contraseñas no coinciden.";
-                break;
-            case "age":
-                isValid = Number.isInteger(Number(value)) && Number(value) >= 18;
-                errorElement.textContent = isValid ? "" : "Debe ser un número entero mayor o igual a 18.";
-                break;
-            case "phone":
-                isValid = /^\d{7,}$/.test(value);
-                errorElement.textContent = isValid ? "" : "Número de al menos 7 dígitos.";
-                break;
-            case "address":
-                isValid = value.length >= 5 && /\s/.test(value);
-                errorElement.textContent = isValid ? "" : "Al menos 5 caracteres, con letras, números y un espacio.";
-                break;
-            case "city":
-                isValid = value.length >= 3;
-                errorElement.textContent = isValid ? "" : "Al menos 3 caracteres.";
-                break;
-            case "postal-code":
-                isValid = value.length >= 3;
-                errorElement.textContent = isValid ? "" : "Al menos 3 caracteres.";
-                break;
-            case "dni":
-                isValid = /^\d{7,8}$/.test(value);
-                errorElement.textContent = isValid ? "" : "Número de 7 u 8 dígitos.";
-                break;
-            default:
-                break;
-        }
-        return isValid;
-    }
 
     function showModal(message) {
         modalMessage.textContent = message;
         modal.style.display = "block";
     }
 
-    // Actualiza el título en tiempo real
-    const fullnameInput = document.getElementById("fullname");
-    fullnameInput.addEventListener("input", function() {
-        const title = document.getElementById("form-title");
-        title.textContent = fullnameInput.value ? `HOLA ${fullnameInput.value.toUpperCase()}` : "HOLA";
-    });
+    function validateForm(data) {
+        let valid = true;
+
+        // Validar nombre completo
+        if (data.fullname.length <= 6 || !data.fullname.includes(' ')) {
+            document.getElementById('error-fullname').textContent = "El nombre debe tener más de 6 letras y al menos un espacio.";
+            valid = false;
+        } else {
+            document.getElementById('error-fullname').textContent = "";
+        }
+
+        // Validar email
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(data.email)) {
+            document.getElementById('error-email').textContent = "El email debe tener un formato válido.";
+            valid = false;
+        } else {
+            document.getElementById('error-email').textContent = "";
+        }
+
+        // Validar contraseña
+        if (data.password.length < 8 || !/\d/.test(data.password) || !/[a-zA-Z]/.test(data.password)) {
+            document.getElementById('error-password').textContent = "La contraseña debe tener al menos 8 caracteres, con letras y números.";
+            valid = false;
+        } else {
+            document.getElementById('error-password').textContent = "";
+        }
+
+        // Validar confirmación de contraseña
+        if (data.password !== data.confirmPassword) {
+            document.getElementById('error-confirm-password').textContent = "Las contraseñas no coinciden.";
+            valid = false;
+        } else {
+            document.getElementById('error-confirm-password').textContent = "";
+        }
+
+        // Validar edad
+        if (!Number.isInteger(+data.age) || data.age < 18) {
+            document.getElementById('error-age').textContent = "La edad debe ser un número entero mayor o igual a 18.";
+            valid = false;
+        } else {
+            document.getElementById('error-age').textContent = "";
+        }
+
+        // Validar teléfono
+        if (!/^\d{7,}$/.test(data.phone)) {
+            document.getElementById('error-phone').textContent = "El teléfono debe tener al menos 7 dígitos y no aceptar espacios, guiones ni paréntesis.";
+            valid = false;
+        } else {
+            document.getElementById('error-phone').textContent = "";
+        }
+
+        // Validar dirección
+        if (data.address.length < 5 || !/\d/.test(data.address) || !/[a-zA-Z]/.test(data.address)) {
+            document.getElementById('error-address').textContent = "La dirección debe tener al menos 5 caracteres, con letras, números y un espacio en el medio.";
+            valid = false;
+        } else {
+            document.getElementById('error-address').textContent = "";
+        }
+
+        // Validar ciudad
+        if (data.city.length < 3) {
+            document.getElementById('error-city').textContent = "La ciudad debe tener al menos 3 caracteres.";
+            valid = false;
+        } else {
+            document.getElementById('error-city').textContent = "";
+        }
+
+        // Validar código postal
+        if (data.postalCode.length < 3) {
+            document.getElementById('error-postal-code').textContent = "El código postal debe tener al menos 3 caracteres.";
+            valid = false;
+        } else {
+            document.getElementById('error-postal-code').textContent = "";
+        }
+
+        // Validar DNI
+        if (!/^\d{7,8}$/.test(data.dni)) {
+            document.getElementById('error-dni').textContent = "El DNI debe ser un número de 7 u 8 dígitos.";
+            valid = false;
+        } else {
+            document.getElementById('error-dni').textContent = "";
+        }
+
+        return valid;
+    }
+
+    function clearForm() {
+        document.getElementById('fullname').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('confirm-password').value = '';
+        document.getElementById('age').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('address').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('postal-code').value = '';
+        document.getElementById('dni').value = '';
+        formTitle.textContent = 'HOLA'; // Restablecer el título
+    }
 
     // Cargar datos desde localStorage si existen
     const savedData = localStorage.getItem('subscriptionData');
+    console.log("Cargando desde localStorage:", savedData);
     if (savedData) {
         const data = JSON.parse(savedData);
         document.getElementById('fullname').value = data.fullname || '';
@@ -157,5 +187,6 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('city').value = data.city || '';
         document.getElementById('postal-code').value = data.postalCode || '';
         document.getElementById('dni').value = data.dni || '';
+        formTitle.textContent = `HOLA ${data.fullname}`;
     }
 });
